@@ -1,0 +1,30 @@
+{
+    "name": "mox-request",
+    "version": "0.1.0",
+    "description": "Request module within the Mox system",
+    "main": "index.js",
+    "scripts": {
+        "build": "browserify --debug -e browserify.js -o ./test/vendor/build.js",
+        "test": "browserify --debug -e browserify.js -o ./test/vendor/build.js && echo 'open http://localhost:3000' && ./node_modules/.bin/serve test/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/TeachBoost/mox-request.git"
+    },
+    "author": "Mike Gioia <mike@particlebits.com> (https://particlebits.com/)",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/TeachBoost/mox-request/issues"
+    },
+    "homepage": "https://github.com/TeachBoost/mox-request",
+    "dependencies": {
+        "superagent" : "*",
+        "underscore" : "*"
+    },
+    "devDependencies": {
+        "mocha" : "*",
+        "chai" : "*",
+        "serve" : "*",
+        "browserify" : "*"
+    }
+}
