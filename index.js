@@ -21,39 +21,45 @@ var Request = {
     // base path
     basePath: null,
     // post requests
-    post: function ( url, data, callback, err ) {
+    post: function ( url, data, cb, errCb ) {
         var self = this,
             data = ( arguments.length > 1 ) ? arguments[ 1 ] : {},
-            callback = ( arguments.length > 2 ) ? arguments[ 2 ] : function () {},
-            err = ( arguments.length > 3 ) ? arguments[ 3 ] : function () {};
+            cb = ( arguments.length > 2 ) ? arguments[ 2 ] : function () {},
+            errCb = ( arguments.length > 3 ) ? arguments[ 3 ] : function () {};
         return Superagent
             .post( this.basePath + url )
             .send( data )
             .set( 'Accept', 'application/json' )
             .type( 'form' )
-            .end( function ( res ) {
-                self.handleResponse( res, callback, err );
+            .end( function ( err, res ) {
+                if ( err ) {
+                    return self.handleNetworkError( err );
+                }
+                return self.handleResponse( res, cb, errCb );
             });
     },
     // get requests
-    get: function ( url, callback, err ) {
+    get: function ( url, cb, errCb ) {
         var self = this,
-            callback = ( arguments.length > 1 ) ? arguments[ 1 ] : function () {},
-            err = ( arguments.length > 2 ) ? arguments[ 2 ] : function () {};
+            cb = ( arguments.length > 1 ) ? arguments[ 1 ] : function () {},
+            errCb = ( arguments.length > 2 ) ? arguments[ 2 ] : function () {};
         return Superagent
             .get( this.basePath + url )
-            .end( function ( res ) {
-                self.handleResponse( res, callback, err );
+            .end( function ( err, res ) {
+                if ( err ) {
+                    return self.handleNetworkError( err, errCb );
+                }
+                return self.handleResponse( res, cb, errCb );
             });
     },
     // response handler
-    handleResponse: function ( res, callback, err ) {
+    handleResponse: function ( res, cb, errCb ) {
         // handle 404s, 401s
         if ( ! this.handle404( res )
             || ! this.handle401( res ) )
         {
             Lockscreen.hideLoading();
-            return err( res );
+            return errCb( res );
         }
 
         // check if res.ok exists; we may be offline
@@ -96,7 +102,7 @@ var Request = {
 
         // apply response to callback
         if ( ! lockUserOut ) {
-            return callback( res.body, res );
+            return cb( res.body, res );
         }
     },
     // handle 404s
@@ -116,11 +122,22 @@ var Request = {
     },
     // handle 401s
     handle401: function ( res ) {
-        // show the offline lockscreen
+        // show the error lockscreen
         if ( res.status == 401 ) {
+            Lockscreen.showError(
+                "You're not authorized to view that resource.",
+                [{
+                    url: this.basePath + '/dashboard',
+                    text: "Back to Dashboard"
+                }],
+                401 );
             return false;
         }
         return true;
+    },
+    handleNetworkError: function ( err, errCb ) {
+        Lockscreen.showOffline();
+        return errCb( err );
     }
 };
 

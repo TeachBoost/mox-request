@@ -25,6 +25,7 @@
         "mocha" : "*",
         "chai" : "*",
         "serve" : "*",
-        "browserify" : "*"
+        "browserify" : "*",
+        "express" : "*"
     }
 }
