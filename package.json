@@ -1,11 +1,10 @@
 {
     "name": "mox-request",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Request module within the Mox system",
     "main": "index.js",
     "scripts": {
-        "build": "browserify --debug -e browserify.js -o ./test/vendor/build.js",
-        "test": "browserify --debug -e browserify.js -o ./test/vendor/build.js && echo 'open http://localhost:3000' && ./node_modules/.bin/serve test/"
+        "test": "mocha"
     },
     "repository": {
         "type": "git",
@@ -25,7 +24,6 @@
         "mocha" : "*",
         "chai" : "*",
         "serve" : "*",
-        "browserify" : "*",
         "express" : "*"
     }
 }
