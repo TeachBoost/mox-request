@@ -13,8 +13,8 @@ var Superagent = require( 'superagent' );
 // helpers
 var _ = require( 'underscore' );
 // dependencies
-var Notify = null,
-    Lockscreen = null;
+var Notify = null
+  , Lockscreen = null;
 
 // library
 var Request = {
